@@ -1,0 +1,19 @@
+﻿<div class="jumbotron">
+    <h1>螢PDF加工ツール</h1>
+    <p class="lead">PDFから注釈の内容を取りながらPDFを自動的に編集するツールです。</p>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <h2>PDF を選択する</h2>
+        @using (Html.BeginForm("ChoosePdf", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <input type="file" name="pdfPath" required />
+            <button type="submit">選択</button>
+        }
+        完了しましたら、下記のボタンをクリックし、原稿をダウンロードしてください。
+        @using (Html.BeginForm("Download_Genko", "Home", FormMethod.Post))
+        {
+            <button type="submit">原稿をダウンロード</button>
+        }
+    </div>
+</div>
