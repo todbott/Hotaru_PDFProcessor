@@ -10,10 +10,16 @@
             <input type="file" name="pdfPath" required />
             <button type="submit">選択</button>
         }
-        完了しましたら、下記のボタンをクリックし、原稿をダウンロードしてください。
-        @using (Html.BeginForm("Download_Genko", "Home", FormMethod.Post))
-        {
-            <button type="submit">原稿をダウンロード</button>
-        }
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div id="downloadGenko">
+            完了しましたら、下記のボタンをクリックし、原稿をダウンロードしてください。
+            @using (Html.BeginForm("Download_Genko", "Home", FormMethod.Post))
+            {
+                <button type="submit">原稿をダウンロード</button>
+            }
+        </div>
     </div>
 </div>

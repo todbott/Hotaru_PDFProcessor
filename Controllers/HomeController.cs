@@ -13,10 +13,7 @@ namespace ElasticBeanstalk_pdf.Controllers
 {
     public class HomeController : Controller
     {
-
-        public string forTextFile;
-        public string fileName;
-
+        
         public ActionResult Index()
         {
             ViewBag.Title = "Home Page";
@@ -26,9 +23,12 @@ namespace ElasticBeanstalk_pdf.Controllers
         [HttpPost]
         public ActionResult ChoosePdf()
         {
-            fileName = Request.Files["pdfPath"].FileName;
+            Session["fileName"] = Request.Files["pdfPath"].FileName;
+            Session["forTextFile"] = "";
+
             var inputPDF = Request.Files["pdfPath"].InputStream;
             var outputPDF = new MemoryStream();
+            
             int furibans = 1;
             Boolean thisPageHasOne = false;
             List<int> pagesToRemove = new List<int>();
@@ -49,7 +49,7 @@ namespace ElasticBeanstalk_pdf.Controllers
                         if (c.IndexOf("###") == -1)
                         {
                             thisPageHasOne = true;
-                            forTextFile = forTextFile + furibans.ToString() + "\r" + c;
+                            Session["forTextFile"] = Session["forTextFile"].ToString() + furibans.ToString() + Environment.NewLine + c + Environment.NewLine + Environment.NewLine;
                             furibans++;
                         } else
                         {
@@ -76,13 +76,24 @@ namespace ElasticBeanstalk_pdf.Controllers
             pdfDoc.Close();
 
             byte[] hereComes = outputPDF.ToArray();
-            return File(hereComes, "application/pdf", fileName.Replace(".pdf", "_編集済.pdf"));
+            
+            return File(hereComes, "application/pdf", Session["fileName"].ToString().Replace(".pdf", "_編集済.pdf"));
         }
 
         public ActionResult Download_Genko()
         {
-            //byte[] hereComes = this.forTextFile.ToString().ToArray();
-            return File(forTextFile, "txt/html", fileName.Replace(".pdf", "_原稿.txt"));
+            var tt = Session["forTextFile"].ToString();
+
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(tt);
+            writer.Flush();
+            stream.Position = 0;
+
+            byte[] hereComes = stream.ToArray();
+            var fn = Session["fileName"].ToString().Replace(".pdf", "_原稿.txt");
+            
+            return File(hereComes, "text/plain", fn);
         }
     }
 }
